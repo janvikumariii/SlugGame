@@ -21,9 +21,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug
-        
       - name: Call API and Store Response
         id: api_call
         run: |
@@ -41,9 +38,9 @@ jobs:
           if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-          sed -i "s/com.example.simpleviralgames/$PACKAGE_NAME/g" app/src/main/AndroidManifest.xml
-          sed -i "s/applicationId \"com.example.simpleviralgames/applicationId \"com.simpleviralgames.$PACKAGE_NAME/g" app/build.gradle
-     
+          sed -i "s#com.example.simpleviralgames#$PACKAGE_NAME#g" app/src/main/AndroidManifest.xml
+          sed -i "s#applicationId \"com.example.simpleviralgames#applicationId \"com.simpleviralgames.$PACKAGE_NAME#g" app/build.gradle
+
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
@@ -51,7 +48,7 @@ jobs:
           git commit -a -m "Updated API Link"
           git push
 
-      - name: Build APK
+      - name: Build with Gradle
         run: ./gradlew assembleDebug
 
       - name: Upload APK artifact
