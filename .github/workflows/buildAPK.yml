@@ -43,6 +43,9 @@ jobs:
           sed "s#applicationId \"com.example.simpleviralgames#applicationId \"com.simpleviralgames.$PACKAGE_NAME#g" app/build.gradle > app/build_temp.gradle
           mv app/build_temp.gradle app/build.gradle
 
+      - name: Add untracked files
+        run: git add .
+
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
