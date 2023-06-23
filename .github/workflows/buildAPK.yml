@@ -23,14 +23,7 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
-
-      - name: Commit changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -a -m "Updated API Link"
-          git push
-
+        
       - name: Call API and Store Response
         id: api_call
         run: |
@@ -50,6 +43,13 @@ jobs:
           fi
           sed -i "s/com.example.simpleviralgames/$PACKAGE_NAME/g" app/src/main/AndroidManifest.xml
           sed -i "s/applicationId \"com.example.simpleviralgames/applicationId \"com.simpleviralgames.$PACKAGE_NAME/g" app/build.gradle
+     
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -a -m "Updated API Link"
+          git push
 
       - name: Build APK
         run: ./gradlew assembleDebug
