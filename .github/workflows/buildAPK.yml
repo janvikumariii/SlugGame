@@ -24,15 +24,32 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleDebug
 
-      - name: Replace API Link
-        run: perl -pi -e 's|https://prod.apis.simpleviralgames.com/game/slug/water-sort-2\?language=en|https://prod.apis.simpleviralgames.com/game/slug/carrom-play\?language=en|g' 'app/src/main/java/com/example/simpleviralgames/repository/gameRepository.kt'
-
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -a -m "Updated API Link"
           git push
+
+      - name: Call API and Store Response
+        id: api_call
+        run: |
+          # Make the API call and store the response in a file
+          API_RESPONSE=$(curl -s -X GET ${{ github.event.inputs.api_link }})
+          echo $API_RESPONSE > api_response.json
+        shell: bash
+
+      - name: Modify Package Name
+        run: |
+          PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
+          PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
+          PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
+          FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
+          if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
+            PACKAGE_NAME="_$PACKAGE_NAME"
+          fi
+          sed -i "s/com.example.simpleviralgames/$PACKAGE_NAME/g" app/src/main/AndroidManifest.xml
+          sed -i "s/applicationId \"com.example.simpleviralgames/applicationId \"com.simpleviralgames.$PACKAGE_NAME/g" app/build.gradle
 
       - name: Build APK
         run: ./gradlew assembleDebug
@@ -42,3 +59,4 @@ jobs:
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+          paths: api_response.json
