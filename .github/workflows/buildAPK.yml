@@ -17,11 +17,11 @@ jobs:
 
       - name: Build and generate APK
         run: |
-          cd /Users/janvikumari/AndroidStudioProjects/simpleviralgames2
+          cd simpleviralgames2
           ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
           name: debug-apk
-          path: /Users/janvikumari/AndroidStudioProjects/simpleviralgames2/app/build/outputs/apk/debug/app-debug.apk
+          path: simpleviralgames2/app/build/outputs/apk/debug/app-debug.apk
