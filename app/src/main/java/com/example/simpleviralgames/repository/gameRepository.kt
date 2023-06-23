@@ -14,7 +14,7 @@ class gameRepository(private val apiCall: apiCall) {
     suspend fun getResponse() {
        
         val result =
-            apiCall.getApiReponse("https://prod.apis.simpleviralgames.com/game/slug/water-sort-2?language=en")
+            apiCall.getApiReponse("https://prod.apis.simpleviralgames.com/game/slug/carrom-play?language=en")
         if (result.body() != null) {
             gameLiveData.postValue(result.body()
             )
