@@ -11,16 +11,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      JAVA_HOME: /usr/lib/jvm/adoptopenjdk-17-hotspot-amd64
-      PATH: ${{ env.JAVA_HOME }}/bin:${{ env.PATH }}
-
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
+
+      - name: Set up environment variables
+        run: |
+          echo "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-17-hotspot-amd64" >> $GITHUB_ENV
+          echo "PATH=\$JAVA_HOME/bin:\$PATH" >> $GITHUB_ENV
 
       - name: Checkout repository
         uses: actions/checkout@v2
