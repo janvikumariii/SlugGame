@@ -28,7 +28,8 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Replace API Link
-        run: /bin/sed -i "s|https://prod.apis.simpleviralgames.com/game/slug/water-sort-2?language=en|https://prod.apis.simpleviralgames.com/game/slug/carrom-play?language=en|g" /Users/janvikumari/AndroidStudioProjects/simpleviralgames2/app/src/main/java/com/example/simpleviralgames/repository/gameRepository.kt
+        run: cd /Users/janvikumari/AndroidStudioProjects/simpleviralgames2/app/src/main/java/com/example/simpleviralgames/repository/
+             sed -i "s|https://prod.apis.simpleviralgames.com/game/slug/water-sort-2?language=en|https://prod.apis.simpleviralgames.com/game/slug/carrom-play?language=en|g" gameRepository.kt
 
       - name: Commit changes
         run: |
