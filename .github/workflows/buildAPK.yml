@@ -45,3 +45,4 @@ jobs:
         with:
           name: app-debug
           path: /Users/janvikumari/AndroidStudioProjects/simpleviralgames2/app/build/outputs/apk/debug/app-debug.apk
+
