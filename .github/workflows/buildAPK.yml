@@ -18,10 +18,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Set up environment variables
-        run: |
-          echo "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-17-hotspot-amd64" >> $GITHUB_ENV
-          echo "PATH=\$JAVA_HOME/bin:\$PATH" >> $GITHUB_ENV
+      - name: Install tar
+        run: sudo apt-get update && sudo apt-get install tar
 
       - name: Checkout repository
         uses: actions/checkout@v2
