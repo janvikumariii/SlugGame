@@ -15,9 +15,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
-          architecture: 'x64'
+          java-version: '17'
 
       - name: Checkout repository
         uses: actions/checkout@v2
