@@ -1,11 +1,14 @@
 package com.example.simpleviralgames
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.lifecycle.Observer
@@ -22,17 +25,34 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_FULLSCREEN
-                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                )
+// Check if the device is running Android 11 or higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowInsetsController = window.insetsController
 
-        // Make the activity full screen
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+            // Hide the navigation bar and make the activity full screen
+            windowInsetsController?.hide(WindowInsets.Type.navigationBars())
+
+            // Enable immersive mode to hide status bar
+            windowInsetsController?.systemBarsBehavior =
+                WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
+            // Set the appearance to a light status bar (optional)
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            // For devices running Android versions prior to 11
+            window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_FULLSCREEN
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    )
+
+            // Make the activity full screen
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+            )
+        }
+
 
         val intent = Intent(this, MainActivity::class.java)
 
@@ -45,6 +65,7 @@ class SplashActivity : AppCompatActivity() {
         mainViewModel.gameData.observe(this, Observer { response ->
             response.data.let { data ->
                 Log.d("Hello", data.toString())
+                title = data.property.name
                 val splashImageView: ImageView = findViewById(R.id.imageView)
                 val splashImageUrl = data.property.image
                 if (splashImageUrl.isNotEmpty()) {
