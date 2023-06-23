@@ -38,8 +38,10 @@ jobs:
           if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-          sed -i "s#com.example.simpleviralgames#$PACKAGE_NAME#g" app/src/main/AndroidManifest.xml
-          sed -i "s#applicationId \"com.example.simpleviralgames#applicationId \"com.simpleviralgames.$PACKAGE_NAME#g" app/build.gradle
+          sed "s#com.example.simpleviralgames#$PACKAGE_NAME#g" app/src/main/AndroidManifest.xml > app/src/main/AndroidManifest_temp.xml
+          mv app/src/main/AndroidManifest_temp.xml app/src/main/AndroidManifest.xml
+          sed "s#applicationId \"com.example.simpleviralgames#applicationId \"com.simpleviralgames.$PACKAGE_NAME#g" app/build.gradle > app/build_temp.gradle
+          mv app/build_temp.gradle app/build.gradle
 
       - name: Commit changes
         run: |
