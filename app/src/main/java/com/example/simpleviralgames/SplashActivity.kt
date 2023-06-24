@@ -8,14 +8,8 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.simpleviralgames.api.RetrofitHelper
-import com.example.simpleviralgames.api.apiCall
-import com.example.simpleviralgames.repository.gameRepository
 import com.example.simpleviralgames.viewmodels.MainViewModel
-import com.example.simpleviralgames.viewmodels.MainViewModelFactory
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
@@ -48,6 +42,7 @@ class SplashActivity : AppCompatActivity() {
                 val responseData = JSONObject(apiResponse).getJSONObject("data")
                 val appName = responseData.getJSONObject("property").getString("name")
                 val splashImageUrl = responseData.getJSONObject("property").getString("image")
+                Log.d("hello",splashImageUrl)
 
                 title = appName
 
