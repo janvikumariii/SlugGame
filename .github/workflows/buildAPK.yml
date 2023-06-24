@@ -29,6 +29,9 @@ jobs:
           echo $API_RESPONSE > api_response.json
         shell: bash
 
+      - name: Install xmlstarlet
+        run: sudo apt-get install xmlstarlet -y
+
       - name: Modify Package Name
         run: |
           PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
