@@ -36,10 +36,12 @@ jobs:
           PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
           FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
           if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
-            PACKAGE_NAME="_$PACKAGE_NAME"
+              PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-          sed -i '' "s#package=\"com.example.simpleviralgames\"#package=\"com.simpleviralgames.$PACKAGE_NAME\"#" app/src/main/AndroidManifest.xml
-          sed -i '' "s#applicationId \"com.example.simpleviralgames\"#applicationId \"com.simpleviralgames.$PACKAGE_NAME\"#" app/build.gradle
+          jq --arg package "$PACKAGE_NAME" '.package = $package' app/src/main/AndroidManifest.xml > app/src/main/AndroidManifest_temp.xml
+          mv app/src/main/AndroidManifest_temp.xml app/src/main/AndroidManifest.xml
+          jq --arg package "$PACKAGE_NAME" '.applicationId = "com.simpleviralgames." + $package' app/build.gradle > app/build_temp.gradle
+          mv app/build_temp.gradle app/build.gradle
 
       - name: Add untracked files
         run: git add .
