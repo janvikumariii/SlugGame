@@ -38,7 +38,8 @@ jobs:
           if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-          sed -i "s#com.example.simpleviralgames#$PACKAGE_NAME#g" app/src/main/AndroidManifest.xml
+          xmlstarlet ed -L -N android="http://schemas.android.com/apk/res/android" -u '/manifest/@package' -v "com.simpleviralgames.$PACKAGE_NAME" app/src/main/AndroidManifest.xml
+          xmlstarlet edit --inplace --pf --ps --update "/manifest/application/@android:label" -v "$PACKAGE_NAME" app/src/main/AndroidManifest.xml
           sed -i "s#applicationId \"com.example.simpleviralgames#applicationId \"com.simpleviralgames.$PACKAGE_NAME#g" app/build.gradle
 
       - name: Add untracked files
