@@ -33,20 +33,17 @@ jobs:
         shell: bash
 
       - name: Modify Package Name
-        run: |
-          SLUG=$(jq -r '.data.slug' api_response.json)
-          PACKAGE_NAME="com.simpleviralgames.$SLUG"
-          APP_NAME=$(jq -r '.data.name' api_response.json)
-          SPLASH_IMAGE_URL=$(jq -r '.data.property.image' api_response.json)
-          GAME_URL=$(jq -r '.data.url' api_response.json)
+        run: >
+          PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
+          PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
+          PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
+          FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
+          if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
+            PACKAGE_NAME="_$PACKAGE_NAME"
+          fi
+          sed -i '' "s/namespace 'com.example.simpleviralgames'/namespace 'com.simpleviralgames.$PACKAGE_NAME'/" app/build.gradle
+          sed -i '' "s/applicationId 'com.example.simpleviralgames'/applicationId 'com.simpleviralgames.$PACKAGE_NAME'/" app/build.gradle
 
-          xmlstarlet ed -L -N android="http://schemas.android.com/apk/res/android" -u '/manifest/@package' -v "$PACKAGE_NAME" app/src/main/AndroidManifest.xml
-          xmlstarlet edit --inplace --pf --ps --update "/manifest/application/@android:label" -v "$APP_NAME" app/src/main/AndroidManifest.xml
-          sed -i "s~applicationId \"com.example.simpleviralgames~applicationId \"$PACKAGE_NAME\"~g" app/build.gradle
-
-
-          echo "Download splash image from $SPLASH_IMAGE_URL"
-          echo "Use game URL: $GAME_URL"
 
 
       - name: Add untracked files
