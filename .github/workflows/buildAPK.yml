@@ -34,12 +34,12 @@ jobs:
           PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
           PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
           PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
-          FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
-          if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
+          FIRST_CHAR=${PACKAGE_NAME:0:1}
+          if ! [[ "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-          sed -i '' "s#package=\"com.example.simpleviralgames\"#package=\"com.$PACKAGE_NAME\"#" app/src/main/AndroidManifest.xml
-          sed -i '' "s#applicationId \"com.example.simpleviralgames\"#applicationId \"com.$PACKAGE_NAME\"#" app/build.gradle
+          sed -i '' "s/namespace 'com.example.simpleviralgames'/namespace 'com.example.$PACKAGE_NAME'/" app/build.gradle
+          sed -i '' "s/applicationId 'com.example.simpleviralgames'/applicationId 'com.example.$PACKAGE_NAME'/" app/build.gradle
 
       - name: Add untracked files
         run: git add .
