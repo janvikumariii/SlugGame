@@ -20,9 +20,6 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v2
-        
-      - name: Install xmlstarlet
-        run: brew install xmlstarlet
 
       - name: Call API and Store Response
         id: api_call
@@ -37,15 +34,12 @@ jobs:
           PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
           PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
           PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
-          FIRST_CHAR=${PACKAGE_NAME:0:1}
-          if ! [[ "$FIRST_CHAR" =~ [a-z_] ]]; then
+          FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
+          if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-
-          sed -i '' "s/namespace 'com.example.simpleviralgames'/namespace 'com.simpleviralgames.$PACKAGE_NAME'/" app/build.gradle
-          sed -i '' "s/applicationId 'com.example.simpleviralgames'/applicationId 'com.simpleviralgames.$PACKAGE_NAME'/" app/build.gradle
-
-
+          sed -i '' "s#package=\"com.example.simpleviralgames\"#package=\"com.simpleviralgames.$PACKAGE_NAME\"#" app/src/main/AndroidManifest.xml
+          sed -i '' "s#applicationId \"com.example.simpleviralgames\"#applicationId \"com.simpleviralgames.$PACKAGE_NAME\"#" app/build.gradle
 
       - name: Add untracked files
         run: git add .
@@ -66,3 +60,16 @@ jobs:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 7
+
+      - name: Get Artifact URL
+        id: get_artifact_url
+        run: |
+          echo "::set-output name=url::$(curl --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --url 'https://api.github.com/repos/janvikumariii/SlugGame/actions/artifacts' \
+          --silent | jq -r '.artifacts[] | select(.name == "api_response") | .archive_download_url')"
+        shell: bash
+
+      - name: Download Artifact
+        run: |
+          DOWNLOAD_URL=$(echo "${{ steps.get_artifact_url.outputs.url }}")
+          curl -sL -o api_response.json "$DOWNLOAD_URL"
