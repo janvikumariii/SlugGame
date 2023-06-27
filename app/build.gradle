@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.doctor_acorn_2'
+    namespace 'com.example.simpleviralgames'
     compileSdk 34
 
     defaultConfig {
