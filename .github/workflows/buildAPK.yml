@@ -39,8 +39,9 @@ jobs:
           PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
           FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
           if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
-            PACKAGE_NAME="_$PACKAGE_NAME"
+              PACKAGE_NAME="_$PACKAGE_NAME"
           fi
+
           sed -i '' "s/namespace 'com.example.simpleviralgames'/namespace 'com.simpleviralgames.$PACKAGE_NAME'/" app/build.gradle
           sed -i '' "s/applicationId 'com.example.simpleviralgames'/applicationId 'com.simpleviralgames.$PACKAGE_NAME'/" app/build.gradle
 
