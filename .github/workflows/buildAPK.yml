@@ -28,6 +28,16 @@ jobs:
           API_RESPONSE=$(curl -s -X GET ${{ github.event.inputs.api_link }})
           echo $API_RESPONSE > api_response.json
         shell: bash
+        
+        
+      - name: Extract Image and URL from API Response
+        id: extract_data
+        run: |
+          IMAGE=$(jq -r '.data.property.image' api_response.json)
+          URL=$(jq -r '.data.url' api_response.json)
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "URL=$URL" >> $GITHUB_ENV
+          
 
       - name: Modify Package Name and App Name
         run: |
