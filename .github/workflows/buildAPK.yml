@@ -38,7 +38,6 @@ jobs:
           if ! [[ "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
           fi
-          sed -i '' "s/namespace 'com.example.simpleviralgames'/namespace 'com.example.$PACKAGE_NAME'/" app/build.gradle
           sed -i '' "s/applicationId 'com.example.simpleviralgames'/applicationId 'com.example.$PACKAGE_NAME'/" app/build.gradle
 
           APP_NAME=$(jq -r '.data.property.name' api_response.json)
