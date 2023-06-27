@@ -32,30 +32,21 @@ class SplashActivity : AppCompatActivity() {
         )
 
         val intent = Intent(this, MainActivity::class.java)
-
-        // Read the API response from the api_response.json file
-        val apiResponseFile = File(cacheDir, "api_response.json")
-        if (apiResponseFile.exists()) {
-            val apiResponse = apiResponseFile.readText()
+        val image = System.getenv("IMAGE")
+        val url = System.getenv("URL")
 
             try {
-                val responseData = JSONObject(apiResponse).getJSONObject("data")
-                val appName = responseData.getJSONObject("property").getString("name")
-                val splashImageUrl = responseData.getJSONObject("property").getString("image")
-                Log.d("hello",splashImageUrl)
-
-                title = appName
-
                 val splashImageView: ImageView = findViewById(R.id.imageView)
-                if (splashImageUrl.isNotEmpty()) {
-                    Glide.with(this).load(splashImageUrl).into(splashImageView)
+                if (image != null) {
+                    if (image.isNotEmpty()) {
+                        Glide.with(this).load(image).into(splashImageView)
+                    }
                 }
 
                 // Create an intent for MainActivity
                 // Add extras to the intent
                 intent.putExtra(
-                    "URL",
-                    responseData.getString("url")
+                    "URL",url
                 ) // Replace "URL" with the appropriate key and responseData.getString("url") with the actual data you want to pass
                 // Start MainActivity
                 startActivity(intent)
