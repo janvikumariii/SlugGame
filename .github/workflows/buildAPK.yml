@@ -29,7 +29,7 @@ jobs:
           echo $API_RESPONSE > api_response.json
         shell: bash
 
-      - name: Modify Package Name
+      - name: Modify Package Name and App Name
         run: |
           PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
           PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
@@ -40,6 +40,9 @@ jobs:
           fi
           sed -i '' "s/namespace 'com.example.simpleviralgames'/namespace 'com.example.$PACKAGE_NAME'/" app/build.gradle
           sed -i '' "s/applicationId 'com.example.simpleviralgames'/applicationId 'com.example.$PACKAGE_NAME'/" app/build.gradle
+
+          APP_NAME=$(jq -r '.data.property.name' api_response.json)
+          sed -i '' "s/\"app_name\">[^<]*</\"app_name\">$APP_NAME</" app/src/main/res/values/strings.xml
 
       - name: Add untracked files
         run: git add .
