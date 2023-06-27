@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.carrom_play'
+    namespace 'com.example.simpleviralgames'
     compileSdk 34
 
     defaultConfig {
