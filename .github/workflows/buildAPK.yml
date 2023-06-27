@@ -33,7 +33,7 @@ jobs:
         shell: bash
 
       - name: Modify Package Name
-        run: >
+        run: |
           PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
           PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
           PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
