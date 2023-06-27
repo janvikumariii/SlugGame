@@ -38,7 +38,7 @@ jobs:
           PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
           PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
           FIRST_CHAR=$(echo "${PACKAGE_NAME:0:1}")
-          if [[ ! "$FIRST_CHAR" =~ [a-z_] ]]; then
+          if ! [ [ "$FIRST_CHAR" =~ [a-z_] ] ]; then
               PACKAGE_NAME="_$PACKAGE_NAME"
           fi
 
