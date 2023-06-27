@@ -20,6 +20,9 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v2
+        
+      - name: Install xmlstarlet
+        run: brew install xmlstarlet
 
       - name: Call API and Store Response
         id: api_call
@@ -28,9 +31,6 @@ jobs:
           API_RESPONSE=$(curl -s -X GET ${{ github.event.inputs.api_link }})
           echo $API_RESPONSE > api_response.json
         shell: bash
-
-      - name: Install xmlstarlet
-        run: sudo apt-get install xmlstarlet -y
 
       - name: Modify Package Name
         run: |
