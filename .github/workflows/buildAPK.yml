@@ -40,12 +40,11 @@ jobs:
           SPLASH_IMAGE_URL=$(jq -r '.data.property.image' api_response.json)
           GAME_URL=$(jq -r '.data.url' api_response.json)
 
-          # Modify the package name
           xmlstarlet ed -L -N android="http://schemas.android.com/apk/res/android" -u '/manifest/@package' -v "$PACKAGE_NAME" app/src/main/AndroidManifest.xml
           xmlstarlet edit --inplace --pf --ps --update "/manifest/application/@android:label" -v "$APP_NAME" app/src/main/AndroidManifest.xml
-          sed -i "s#applicationId \"com.example.simpleviralgames#applicationId \"$PACKAGE_NAME\"#g" app/build.gradle
+          sed -i "s~applicationId \"com.example.simpleviralgames~applicationId \"$PACKAGE_NAME\"~g" app/build.gradle
 
-          # Use the splash image and game URL in your app
+
           echo "Download splash image from $SPLASH_IMAGE_URL"
           echo "Use game URL: $GAME_URL"
 
