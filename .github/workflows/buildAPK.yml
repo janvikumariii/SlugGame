@@ -53,6 +53,10 @@ jobs:
           APP_NAME=$(jq -r '.data.property.name' api_response.json)
           sed -i '' "s/\"app_name\">[^<]*</\"app_name\">$APP_NAME</" app/src/main/res/values/strings.xml
 
+      - name: Debug Package Name
+        run: |
+          echo "PACKAGE_NAME=$PACKAGE_NAME"
+      
       - name: Add untracked files
         run: git add .
 
