@@ -34,6 +34,9 @@ class SplashActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         val image = System.getenv("IMAGE")
         val url = System.getenv("URL")
+        val appName = System.getenv("APP_NAME")
+
+        supportActionBar?.title = appName
 
             try {
                 val splashImageView: ImageView = findViewById(R.id.imageView)
