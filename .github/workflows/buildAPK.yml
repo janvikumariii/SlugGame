@@ -42,8 +42,15 @@ jobs:
       - name: Modify Package Name and App Name
         run: |
           PACKAGE_NAME=$(jq -r '.data.property.name' api_response.json)
-          PACKAGE_NAME=${PACKAGE_NAME//[- ]/_}
-          PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]')
+
+      - name: Debug Package Name API
+        run: |
+          echo "PACKAGE_NAME=$PACKAGE_NAME"
+    
+      - name: Clean and Format Package Name
+        run: |
+          PACKAGE_NAME=$(echo "$PACKAGE_NAME" | sed -e 's/[^A-Za-z0-9_]/_/g')
+          PACKAGE_NAME=$(echo "$PACKAGE_NAME" | tr '[:upper:]' '[:lower:]'
           FIRST_CHAR=${PACKAGE_NAME:0:1}
           if ! [[ "$FIRST_CHAR" =~ [a-z_] ]]; then
             PACKAGE_NAME="_$PACKAGE_NAME"
